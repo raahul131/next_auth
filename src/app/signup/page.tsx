@@ -4,18 +4,28 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { axios } from "axios";
 
-const LoginPage = () => {
+const SignupPage = () => {
   const [user, setUser] = React.useState({
     email: "",
     password: "",
+    username: "",
   });
 
-  const onLogin = async () => {};
+  const onSignup = async () => {};
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>LogIn</h1>
+      <h1>SignUp</h1>
       <br />
+      <label htmlFor="username">Username</label>
+      <input
+        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600"
+        id="username"
+        type="text"
+        value={user.username}
+        onChange={(e) => setUser({ ...user, username: e.target.value })}
+        placeholder="username"
+      />
 
       <label htmlFor="email">E-mail</label>
       <input
@@ -38,19 +48,19 @@ const LoginPage = () => {
       />
 
       <button
-        onClick={onLogin}
+        onClick={onSignup}
         className="mt-4 border text-lg rounded-md p-2 mb-4 hover:bg-white hover:text-black transition-all duration-200"
       >
-        LogIn here
+        SignUp here
       </button>
       <Link
-        href="/signup"
+        href="/login"
         className=" border p-2 rounded-md text-lg mb-4 hover:bg-white hover:text-black transition-all duration-200"
       >
-        Visit SignUp Page
+        Visit LogIn Page
       </Link>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignupPage;
