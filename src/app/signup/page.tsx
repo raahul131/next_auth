@@ -1,25 +1,51 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { axios } from "axios";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const SignupPage = () => {
+  const router = useRouter();
+
   const [user, setUser] = React.useState({
     email: "",
     password: "",
     username: "",
   });
 
-  const onSignup = async () => {};
+  const [buttonDisabled, setButtonDisabled] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const onSignup = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post("/api/users/signup", user);
+      console.log("SignUp success", response.data);
+      router.push("/login");
+    } catch (error: any) {
+      console.log("SignUp Failed", error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1>SignUp</h1>
+      <h1>{loading ? "Processing" : "SignUp"}</h1>
       <br />
       <label htmlFor="username">Username</label>
       <input
-        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600"
+        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600 text-black"
         id="username"
         type="text"
         value={user.username}
@@ -29,7 +55,7 @@ const SignupPage = () => {
 
       <label htmlFor="email">E-mail</label>
       <input
-        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600"
+        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600 text-black"
         id="email"
         type="text"
         value={user.email}
@@ -39,7 +65,7 @@ const SignupPage = () => {
 
       <label htmlFor="password">Password</label>
       <input
-        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600"
+        className="rounded-md p-2 BORDER border-gray-300 MB-4 focus:outline-none focus:border-gray-600 text-black"
         id="password"
         type="password"
         value={user.password}
@@ -51,7 +77,7 @@ const SignupPage = () => {
         onClick={onSignup}
         className="mt-4 border text-lg rounded-md p-2 mb-4 hover:bg-white hover:text-black transition-all duration-200"
       >
-        SignUp here
+        {buttonDisabled ? "No Signup" : "SignUp"}
       </button>
       <Link
         href="/login"
